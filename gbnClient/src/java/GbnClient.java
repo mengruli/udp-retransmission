@@ -1,6 +1,4 @@
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -15,6 +13,14 @@ public class GbnClient {
     public static void main(String[] args) throws IOException, URISyntaxException{
 
         InputStream in = GbnClient.class.getResourceAsStream("/COSC635_P2_DataSent.txt");
+
+        if (args.length > 0) {
+            String inputFIle = args[0];
+            File file = new File(inputFIle);
+
+            // override the default file if there's input file specified
+            in = new FileInputStream(file);
+        }
         Sender sender = new Sender();
 
         short read = 0;

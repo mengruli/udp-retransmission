@@ -39,6 +39,23 @@ resend all packets from here
 #### What's not implemented
 - handle server timeout
 
+#### Project Structure
+- /gbnClient
+
+The client with Go-Back-N implementation
+
+- /gbnServer
+
+The server with Go-Back-N implementation
+
+- /shared
+
+Common data structure shared by the client and server
+
+- /gbnGUI
+
+Not working yet. Ignore it.
+
 #### Build & Run
 0. prerequisites
 - JDK 1.8
@@ -62,7 +79,9 @@ java -jar gbnServer-1.0.jar --lost <Lost Rate> --output <Path to the output file
 
 ```bash
 cd <Project Root>/gbnClient/build/libs/
-java -jar gbnClient-1.0.jar
+java -jar gbnClient-1.0.jar <Path to input file>
+
+# !!! If you don't enter <Path to input file>, the client will use the default file in resources/COSC635_P2_DataSent.txt !!!
 ```
 
 4. Sample Terminal Output
