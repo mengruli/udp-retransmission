@@ -20,6 +20,11 @@ public class GbnClient {
         short read = 0;
         int total_file_read = 0;
 
+        int numPacketSent = 0;
+        int numPacketLost = 0;
+        long start_time = 0;
+        long end_time = 0;
+
         short seq = 0;
         short window_size = GbnPacket.WINDOW_SIZE;
         char message_type = 'S';
@@ -27,6 +32,7 @@ public class GbnClient {
         short waiting_for_ack = 0; // smallest not acked #
         Map<Short, ByteBuffer> cachedRequest = new HashMap<>();
 
+        start_time = System.currentTimeMillis();
         while(read >= 0) {
 
             short outstanding_packet = (short)(seq - waiting_for_ack);
@@ -49,7 +55,7 @@ public class GbnClient {
                 }
                 else {
                     read = (short)in.read(payload.array());
-                    System.out.println(read);
+
                     header.putShort(6, read);
 
                     packet.put(header.array());
@@ -61,10 +67,21 @@ public class GbnClient {
                     sender.send(packet);
 
                     if (read < 0) { // last packet, don't expect to receive anything
-                        System.out.println(String.format("Done sending the file.\n Total bytes sent: %d", total_file_read));
+                        System.out.println(String.format("Done reading all the file.\n Total bytes read: %d", total_file_read));
+                        end_time = System.currentTimeMillis();
+                        long time_elapsed = end_time - start_time;
+
+                        System.out.println("Generating Client Stats...");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("| # Packets Sent | # Packets Lost + | Time Elapsed (ms) |");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("|        " + numPacketSent +"      |        " + numPacketLost+ "       |     "+ time_elapsed + "        |");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                         break;
                     }
                 }
+
+                numPacketSent++;
 
             } else { // window is full, just wait another around
                 continue;
@@ -81,6 +98,7 @@ public class GbnClient {
             if (type == 'L') {
                 seq = seq_acked;
                 waiting_for_ack = (short)(seq_acked + 1);
+                numPacketLost++;
 
             } else if (type == 'A') {
                 waiting_for_ack = (short)(seq_acked + 1);

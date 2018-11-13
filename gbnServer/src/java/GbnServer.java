@@ -17,7 +17,7 @@ public class GbnServer {
 
         int port = 55055;//Integer.parseInt(args[1]);
 	    String filename = args[3] != null ?
-                args[3] : "/home/mengruli/Documents/teo-repo/udp-retransmission/results/COSC635_P2_DataReceived.txt";
+                args[3] : "/tmp/COSC635_P2_DataReceived.txt";
 
 	    int lost_rate = Integer.parseInt(args[1]);
 
@@ -44,6 +44,9 @@ public class GbnServer {
         private FileOutputStream os;
         private int lostRate;
         private short expectedSeq;
+        private int numSent;
+        private int numLost;
+        private int numDropped;
 
         public RequestHandler(int port, String filename, int lostRate) throws IOException{
             socket = new DatagramSocket(port);
@@ -68,7 +71,7 @@ public class GbnServer {
                     socket.receive(receivedPacket);
 
                     // retrieve packet data
-                    GbnPacket.printByteBuffer(packet);
+//                    GbnPacket.printByteBuffer(packet);
                     short seq = packet.getShort(0);
 //                    isLast = packet.getShort(2) == 0 ? false : true;
                     char type = (char)packet.getShort(4);
@@ -77,6 +80,13 @@ public class GbnServer {
                     if (len < 0) {
                         // if you want the server continue serving other clients, change it to continue;
                         System.out.println("Done Writing to file!");
+                        System.out.println("Generating Server Stats...");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("| Simulated Lost Rate | # Packets Received | # Packets Lost + | Packets Dropped |");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                        System.out.println("|         "+ lostRate+" %        |         " + numSent +"      |          " + numLost+ "       |      "+ numDropped+ "        |");
+                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
                         break;
                     }
 
@@ -89,7 +99,7 @@ public class GbnServer {
                     int rn = rand.nextInt(100); // [0, 100)
 
                     if (rn < lostRate) { // lost
-                        System.out.println(String.format("Lost packet for seq # = %d", seq));
+//                        System.out.println(String.format("Lost packet for seq # = %d", seq));
 
                         // Acknowledge loss
                         char message_type = 'L';
@@ -98,9 +108,13 @@ public class GbnServer {
                         header.putShort(4, (short)message_type);
                         DatagramPacket packetToSend = new DatagramPacket(header.array(), header.array().length, address, port);
                         socket.send(packetToSend);
+                        numSent++;
+                        numLost++;
                     }
                     else if (seq != expectedSeq) { // not an expected packet, simply drop it
-                        System.out.println(String.format("Expected seq# <> received seq#! Simply drop it...", seq));
+//                        System.out.println(String.format("Expected seq# <> received seq#! Simply drop it...", seq));
+
+                        numDropped++;
                     }
                     else if (seq == expectedSeq){
                         // save to file
@@ -117,9 +131,8 @@ public class GbnServer {
                         header.putShort(4, (short)message_type);
                         DatagramPacket packetToSend = new DatagramPacket(header.array(), header.array().length, address, port);
                         socket.send(packetToSend);
+                        numSent++;
                     }
-
-
 //                    System.out.println(String.format("Sent to Client at %s: %d", address.getHostAddress(), port));
                 } catch (IOException ex) {
                     System.out.println(String.format("Error in RequestHandler.run()", ex.getMessage()));
