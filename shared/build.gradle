@@ -1,7 +1,7 @@
 sourceSets {
     main {
         java {
-            srcDirs = ['src/com/hoang']
+            srcDirs = ['src/com/mli']
         }
     }
 }

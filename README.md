@@ -1,6 +1,6 @@
-# UDP Error Control
+# Implement UDP Error Control - Go Back N
 
-## Protocol Design
+## The Protocol
 ### Header
 |              0 - 15 bits            |               16 - 32 bits              |
 | ----------------------------------- | --------------------------------------- |
@@ -24,9 +24,7 @@ The max number of outstanding packets (default set to 4)
 
 The playload size in byte
 
-### Go-Back-N
-**Java** is the programming language
-#### What's implemented
+### What's implemented
 - The total number of outstanding packets at a time cannot be greater than `window size`
 - Receiver keeps track of the `expected seq #`. If the packet received has sequence number other than `expected seq #', receiver
 simply drop the packet
@@ -36,10 +34,10 @@ simply drop the packet
 resend all packets from here
 - Sender caches packets sent in a `HashMap`
 
-#### What's not implemented
+### What's not implemented
 - handle server timeout
 
-#### Project Structure
+## Build & Run
 - /gbnClient
 
 The client with Go-Back-N implementation
@@ -52,11 +50,6 @@ The server with Go-Back-N implementation
 
 Common data structure shared by the client and server
 
-- /gbnGUI
-
-Not working yet. Ignore it.
-
-#### Build & Run
 0. prerequisites
 - JDK 1.8
 - Gradle

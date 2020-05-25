@@ -1,2 +1,2 @@
 rootProject.name = 'udp-demo'
-include 'gbnClient', 'gbnServer', 'shared', 'gbnGUI'
+include 'gbnClient', 'gbnServer', 'shared'
