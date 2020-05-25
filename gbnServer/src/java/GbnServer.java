@@ -17,7 +17,7 @@ public class GbnServer {
 
         int port = 55055;//Integer.parseInt(args[1]);
 	    String filename = args[3] != null ?
-                args[3] : "/tmp/COSC635_P2_DataReceived.txt";
+                args[3] : "/tmp/sample_data_received.txt";
 
 	    int lost_rate = Integer.parseInt(args[1]);
 

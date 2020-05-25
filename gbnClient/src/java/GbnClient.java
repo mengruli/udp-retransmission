@@ -12,7 +12,7 @@ public class GbnClient {
 
     public static void main(String[] args) throws IOException, URISyntaxException{
 
-        InputStream in = GbnClient.class.getResourceAsStream("/COSC635_P2_DataSent.txt");
+        InputStream in = GbnClient.class.getResourceAsStream("/sample_data.txt");
 
         if (args.length > 0) {
             String inputFIle = args[0];

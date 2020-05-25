@@ -65,7 +65,7 @@ gradle build
 
 ```bash
 cd <Project Root>/gbnServer/build/libs/
-java -jar gbnServer-1.0.jar --lost <Lost Rate> --output <Path to the output file you want to compare>
+java -jar gbnServer-1.0.jar --lost <Lost Rate> --output <Path to the output file, default /tmp/sample_data_received.txt>
 ```
 
 3. Start the Client
@@ -74,7 +74,7 @@ java -jar gbnServer-1.0.jar --lost <Lost Rate> --output <Path to the output file
 cd <Project Root>/gbnClient/build/libs/
 java -jar gbnClient-1.0.jar <Path to input file>
 
-# !!! If you don't enter <Path to input file>, the client will use the default file in resources/COSC635_P2_DataSent.txt !!!
+# !!! If you don't enter <Path to input file>, the client will use the default file in resources/sample_data.txt
 ```
 
 4. Sample Terminal Output
@@ -185,3 +185,5 @@ SStarting the UDP client...
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ```
+
+Then you diff the `<Path to the output file>` and `<Path to input file>` to make sure there's no data loss.
